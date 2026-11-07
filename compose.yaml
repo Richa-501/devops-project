@@ -10,11 +10,12 @@ services:
     networks:
       - flask-net
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL","pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+   healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 5s
-      timeout: 3s
-      retries: 10
+      timeout: 5s
+      retries: 20
+      start_period: 15s  
   
   flask:
     build: .
