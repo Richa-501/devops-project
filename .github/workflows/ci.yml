@@ -13,6 +13,22 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+services:
+  db:
+    image: postgres:16
+    env:
+      POSTGRES_DB: testdb
+      POSTGRES_USER: testuser
+      POSTGRES_PASSWORD: testpassword
+    ports:
+      - 5432:5432
+
+env:
+  DB_HOST: localhost
+  DB_NAME: testdb
+  DB_USER: testuser
+  DB_PASSWORD: testpassword
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
