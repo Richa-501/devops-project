@@ -13,42 +13,43 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-services:
-  db:
-    image: postgres:16
+    services:
+      db:
+        image: postgres:16
+        env:
+          POSTGRES_DB: testdb
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpassword
+        ports:
+          - "5432:5432"
+
     env:
-      POSTGRES_DB: testdb
-      POSTGRES_USER: testuser
-      POSTGRES_PASSWORD: testpassword
-    ports:
-      - "5432:5432"
+      DB_HOST: localhost
+      DB_NAME: testdb
+      DB_USER: testuser
+      DB_PASSWORD: testpassword
 
-env:
-  DB_HOST: localhost
-  DB_NAME: testdb
-  DB_USER: testuser
-  DB_PASSWORD: testpassword
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-steps:
-  - name: Checkout Code
-    uses: actions/checkout@v4
+      - name: Set Up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
 
-  - name: Set Up Python
-    uses: actions/setup-python@v5
-    with:
-      python-version: "3.12"
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest
 
-  - name: Install Dependencies
-    run: |
-      python -m pip install --upgrade pip
-      pip install -r requirements.txt
-      pip install pytest
+      - name: Build Docker Image
+        run: docker build -t flask-notes:latest .
 
-  - name: Build Docker Image
-    run: docker build -t flask-notes:latest .
-
-  - name: Run Tests
-    run: python -m pytest -v
+      - name: Run Tests
+        run: python -m pytest -v
+    
       - name: Show Logs If Failed
         if: failure()
         run: docker compose logs
