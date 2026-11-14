@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres:16
+    image: postgres:16-alpine
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
@@ -19,6 +19,7 @@ services:
 
   flask:
     build: .
+    image: notes-app:latest
     environment:
       DB_HOST: db
       DB_NAME: ${DB_NAME}
@@ -42,6 +43,31 @@ services:
     networks:
       - flask-net
     restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - flask-net
+    restart: unless-stopped
+
+  postgres-exporter:
+    image: "prometheuscommunity/postgres-exporter:latest"
+    environment:
+      DATA_SOURCE_URI: "db:5432/${DB_NAME}?sslmode=disable"
+      DATA_SOURCE_USER: ${DB_USER}
+      DATA_SOURCE_PASS: ${DB_PASSWORD}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - flask-net
+    restart: unless-stopped
+
 
 networks:
   flask-net:

@@ -3,11 +3,10 @@ FROM python:3.13-slim
 WORKDIR /app
 
 COPY requirements.txt .
-COPY app.py .
-COPY templates/ templates/
+COPY --chown=appuser:appuser app.py .
+COPY --chown=appuser:appuser templates/ templates/
 
-RUN pip install -r requirements.txt
-RUN useradd --create-home appuser
+RUN pip install --no-cache-dir -r requirements.txt \ && useradd --create-home appuser
 USER appuser
 
 EXPOSE 5000

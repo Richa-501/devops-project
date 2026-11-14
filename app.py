@@ -1,9 +1,10 @@
+from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
 from dotenv import load_dotenv
 load_dotenv()
 
 import os
 import psycopg2
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect,Response
 
 REQUIRED_VARS = ["DB_HOST", "DB_NAME", "DB_USER", "DB_PASSWORD"]
 
@@ -62,7 +63,12 @@ def health():
     except Exception:
         return {"status": "unhealthy", "database": "down"}, 503
 
-
+@app.route("/metrics")
+def metrics():
+    return Response(
+       generate_latest(),
+       mimetype=CONTENT_TYPE_LATEST
+     )
 init_db()
 
 if __name__ == "__main__":
