@@ -73,8 +73,8 @@ pipeline {
             ),
             usernamePassword(
                 credentialsId: 'dockerHubcred',
-                usernameVariable: 'DOCKERHUB_USER',
-                passwordVariable: 'DOCKERHUB_PASS'
+                usernameVariable: 'dockerHubUser',
+                passwordVariable: 'dockerHubPass'
             )
         ]) {
             sh '''
@@ -90,7 +90,7 @@ pipeline {
                     -e DB_NAME=testdb \
                     -e DB_USER="$DB_USER" \
                     -e DB_PASSWORD="$DB_PASSWORD" \
-                    $DOCKERHUB_USER/flask-notes-app:$BUILD_NUMBER
+                    $dockerHubUser/flask-notes-app:$BUILD_NUMBER
             '''
         }
     }
