@@ -75,7 +75,7 @@ pipeline {
                 -e DB_NAME=testdb \
                 -e DB_USER=$DB_USER \
                 -e DB_PASSWORD=$DB_PASSWORD \
-                ${env.dockerHubUser}/flask-notes-app:${BUILD_NUMBER}
+                ${env.dockerHubUser}/flask-notes-app:$BUILD_NUMBER
                 }
                 '''
             }
