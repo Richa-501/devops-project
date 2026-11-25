@@ -19,9 +19,12 @@ pipeline {
             }
         }
 
-        stage('Test') {
+        stage('Unit Test') {
             steps {
-                echo 'Running application tests'
+                echo 'test'
+                sh '''
+                .venv/bin/python -m pytest tests/
+                '''
             }
         }
     }
