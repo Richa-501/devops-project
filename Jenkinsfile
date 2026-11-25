@@ -40,6 +40,16 @@ pipeline {
                 sh 'docker build -t flask-notes-app:${BUILD_NUMBER} .'
             }
         }
+        stage('image scan'){
+            steps{
+                sh '''
+                  trivy --config ""image \
+                  --severity HIGH,CRITICAL \
+                  --exit-code 1 \
+                  flask-notes-app:${BUILD_NUMBER}
+                  '''
+            }
+        }
                 
     }
 }
