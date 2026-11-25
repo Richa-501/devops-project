@@ -50,6 +50,19 @@ pipeline {
                   '''
             }
         }
+        stage("push image to docker hub"){
+                steps{
+                    withCredentials([usernamePassword(
+                    credentialsId:"dockerHubcred",
+                    usernameVariable:"dockerHubUser", 
+                    passwordVariable:"dockerHubPass")]){
+                sh 'echo $dockerHubPass | docker login -u $dockerHubUser --password-stdin'
+                sh "docker image tag flask-notes-app:${BUILD_NUMBER} ${env.dockerHubUser}/flask-notes-app:${env.dockerHubUser}"
+                sh "docker push ${env.dockerHubUser}/flask-notes-app:${env.dockerHubUser}"
+                }
+                }
+                
+            }
                 
     }
 }
