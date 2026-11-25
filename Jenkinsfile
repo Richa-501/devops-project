@@ -78,7 +78,7 @@ pipeline {
             )
         ]) {
             sh '''
-                docker pull $DOCKERHUB_USER/flask-notes-app:$BUILD_NUMBER
+                docker pull $dockerHubUser/flask-notes-app:$BUILD_NUMBER
 
                 docker rm -f flask-deployment || true
 
