@@ -73,7 +73,7 @@ pipeline {
             )
         ]) {
             sh '''
-                docker pull $dockerHubUser/flask-notes-app:$BUILD_NUMBER
+                docker pull richa501/flask-notes-app:$BUILD_NUMBER
 
                 docker rm -f flask-deployment || true
 
@@ -85,7 +85,7 @@ pipeline {
                     -e DB_NAME=testdb \
                     -e DB_USER="$DB_USER" \
                     -e DB_PASSWORD="$DB_PASSWORD" \
-                    $dockerHubUser/flask-notes-app:$BUILD_NUMBER
+                    richa501/flask-notes-app:$BUILD_NUMBER
             '''
         }
     }
