@@ -64,12 +64,17 @@ pipeline {
                 
             }
         stage('Deployment') {
-                steps {
-                    withCredentials([
-                     usernamePassword(
-                        credentialsId: 'database-credentials',
-                        usernameVariable: 'DB_USER',
-                        passwordVariable: 'DB_PASSWORD'
+    steps {
+        withCredentials([
+            usernamePassword(
+                credentialsId: 'database-credentials',
+                usernameVariable: 'DB_USER',
+                passwordVariable: 'DB_PASSWORD'
+            ),
+            usernamePassword(
+                credentialsId: 'dockerHubcred',
+                usernameVariable: 'DOCKERHUB_USER',
+                passwordVariable: 'DOCKERHUB_PASS'
             )
         ]) {
             sh '''
