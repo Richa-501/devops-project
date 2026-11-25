@@ -35,5 +35,11 @@ pipeline {
                 }
             }
         }
+        stage('Build'){
+            steps{
+                sh 'docker build -t flask-notes-app:${BUILD_NUMBER} .'
+            }
+        }
+                
     }
 }
