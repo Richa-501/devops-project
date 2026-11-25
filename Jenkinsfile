@@ -63,23 +63,33 @@ pipeline {
                 }
                 
             }
-        stage('Deployment'){
-            steps{
-                sh'''
-                docker pull ${env.dockerHubUser}/flask-notes-app:${BUILD_NUMBER}
+        stage('Deployment') {
+                steps {
+                    withCredentials([
+                     usernamePassword(
+                        credentialsId: 'database-credentials',
+                        usernameVariable: 'DB_USER',
+                        passwordVariable: 'DB_PASSWORD'
+            )
+        ]) {
+            sh '''
+                docker pull $dockerHubUser/flask-notes-app:$BUILD_NUMBER
+
                 docker rm -f flask-deployment || true
+
                 docker run -d \
-                --name flask-deployment \
-                --network flask-deployment-net \
-                -e DB_HOST=jenkins-test-db \
-                -e DB_NAME=testdb \
-                -e DB_USER=$DB_USER \
-                -e DB_PASSWORD=$DB_PASSWORD \
-                $env.dockerHubUser/flask-notes-app:$BUILD_NUMBER
-                }
-                '''
-            }
+                    --name flask-deployment \
+                    --network flask-deployment-net \
+                    -p 8082:5000 \
+                    -e DB_HOST=jenkins-test-db \
+                    -e DB_NAME=testdb \
+                    -e DB_USER="$DB_USER" \
+                    -e DB_PASSWORD="$DB_PASSWORD" \
+                    $dockerHubUser/flask-notes-app:$BUILD_NUMBER
+            '''
         }
+    }
+}
                 
     }
 }
