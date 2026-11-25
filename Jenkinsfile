@@ -4,7 +4,8 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                echo 'Checking out project code'
+                echo 'clone the code'
+                checkout scm
             }
         }
 
