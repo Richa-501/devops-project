@@ -69,13 +69,13 @@ pipeline {
                 docker pull ${env.dockerHubUser}/flask-notes-app:${BUILD_NUMBER}
                 docker rm -f flask-deployment || true
                 docker run -d \
-                --name flask-deployment \
+                -- name flask-deployment \
                 -- network flask-deployment-net \
                 -e DB_HOST=jenkins-test-db \
                 -e DB_NAME=testdb \
                 -e DB_USER=$DB_USER \
                 -e DB_PASSWORD=$DB_PASSWORD \
-                ${env.dockerHubUser}/flask-notes-app:$BUILD_NUMBER
+                $env.dockerHubUser/flask-notes-app:$BUILD_NUMBER
                 }
                 '''
             }
